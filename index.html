@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HappyBirthday</title>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+      body {
+        background-color: white;
+        color: black;
+        padding: 0;
+        margin: 0;
+        height: 200vh;
+      }
+
+      .typewriter {
+        font-size: 1.2rem;
+        color: white;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+        width: 100%;
+        text-align: justify;
+      }
+
+      .cover {
+        width: 160px;
+        height: 160px;
+        border-radius: 15px;
+        margin-left: 20px;
+      }
+
+      @keyframes fadein {
+        0% {
+          opacity: 0;
+          scale: 2;
+        }
+        100% {
+          opacity: 1;
+          scale: 1;
+        }
+      }
+
+      #kotak {
+        animation: fadein 1s ease-in;
+      }
+
+      #interaksi {
+        transition: transform 0.1s ease-out; /* biar animasi smooth */
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <h2 class="text-center mt-10 text-3xl font-black">
+        Happy Birtdayy Chickoos!!!
+      </h2>
+    </div>
+
+    <div class="typewriter cursor text-xl" id="typewriter"></div>
+
+    <div
+      class="w-3/4 backdrop-blur border flex justify-center items center p-10 mx-auto mt-20 rounded-xl"
+      id="kotak"
+    >
+      <h3 class="text-2xl">
+        Haloo Chickoos! very spl u r
+      </h3>
+    </div>
+
+    <div
+      id="interaksi"
+      class="w-3/4 h-64 backdrop-blur border flex flex-col justify-center items-center p-10 mx-auto mt-20 rounded-xl"
+    >
+      <h1 class="text-2xl font-extrabold">I have something for youuu.</h1>
+      <img src="/assets/stiker2-removebg-preview.png" class="w-20" alt="" />
+      <button
+        class="w-40 p-2 bg-black text-white font-bold rounded-sm hover:shadow-xl"
+        onclick="klik()"
+      >
+        click chickoos
+      </button>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+    <script>
+      // const text =
+      //   "";
+      // const speed = 40;
+      // let i = 0;
+
+      // function ketik() {
+      //   if (i < text.length) {
+      //     document.getElementById("typewriter").textContent += text.charAt(i);
+      //     i++;
+      //     setTimeout(ketik, speed);
+      //   }
+      // }
+
+      // ketik();
+
+      const interaksi = document.getElementById("interaksi");
+
+      window.addEventListener("scroll", () => {
+        const rect = interaksi.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+
+        // Hitung jarak pusat elemen ke tengah viewport
+        const distanceFromCenter = Math.abs(
+          rect.top + rect.height / 2 - windowHeight / 2
+        );
+        const maxDistance = windowHeight / 2 + rect.height / 2;
+
+        // Skala antara 0.8 sampai 1.2 (semakin dekat ke tengah makin besar)
+        let scale = 1.2 - (distanceFromCenter / maxDistance) * 1;
+        scale = Math.max(0.2, Math.min(scale, 1));
+
+        interaksi.style.transform = `scale(${scale})`;
+      });
+
+      function klik() {
+        window.location.href = "index3.html";
+      }
+    </script>
+  </body>
+</html>

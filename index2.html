@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buku</title>
+    <link rel="stylesheet" href="fontawesome/css/all.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      @font-face {
+        font-family: "hbd";
+        src: url("font/kalam.ttf") format("truetype");
+      }
+
+      html,
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: powderblue;
+      }
+
+      /* Book */
+      .book {
+        position: relative;
+        width: 350px;
+        height: 550px;
+        transition: transform 0.5s;
+      }
+
+      .paper {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        perspective: 1500px;
+      }
+
+      .front,
+      .back {
+        background-color: white;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        transform-origin: left;
+        transition: transform 0.5s;
+        border-radius: 12px;
+      }
+
+      .front {
+        z-index: 1;
+        backface-visibility: hidden;
+        border-left: 3px solid powderblue;
+      }
+
+      .back {
+        z-index: 0;
+      }
+
+      .front-content,
+      .back-content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .back-content {
+        transform: rotateY(180deg);
+      }
+
+      /* Paper flip effect */
+      .flipped .front,
+      .flipped .back {
+        transform: rotateY(-180deg);
+      }
+
+      /* Controller Buttons */
+      button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        margin: 10px;
+        transition: transform 0.5s;
+      }
+
+      button:focus {
+        outline: none;
+      }
+
+      button:hover i {
+        color: #636363;
+      }
+
+      i {
+        font-size: 50px;
+        color: gray;
+      }
+
+      /* Paper stack order */
+      #p1 {
+        z-index: 6;
+      }
+
+      #p2 {
+        z-index: 5;
+      }
+
+      #p3 {
+        z-index: 4;
+      }
+
+      #p4 {
+        z-index: 3;
+      }
+
+      #p5 {
+        z-index: 2;
+      }
+
+      #p6 {
+        z-index: 1;
+      }
+
+      img {
+        border-radius: 12px;
+      }
+
+      #seek-bar {
+        -webkit-appearance: none;
+        overflow: hidden;
+      }
+
+      #seek-bar::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 2px;
+        height: 20px;
+        background-color: lightskyblue;
+        box-shadow: -400px 0 0 400px wheat;
+      }
+
+      .playButton span {
+        position: absolute;
+        top: 50%;
+        left: 25%;
+        transform: translateY(-50%);
+        width: 5px;
+        height: 10px;
+        border-radius: 3px;
+        background-color: rgb(255, 255, 255);
+        transition: 0.5s;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
+
+      .playButton span:nth-child(2) {
+        left: 55%;
+        transform-origin: center;
+      }
+
+      .playButton.pause span:nth-child(2) {
+        transform: translateY(-50%) scaleY(0);
+      }
+
+      .playButton.pause span:nth-child(1) {
+        width: 35%;
+        left: 37%;
+        transform: translateY(-50% -50%);
+        border-radius: 0;
+        clip-path: polygon(0 0, 100% 50%, 100% 50%, 0% 100%);
+      }
+
+      .playButton.pause {
+        animation: pulse 2s linear infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0;
+        }
+        50% {
+          box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+        100% {
+          box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.4);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Previous Button -->
+    <button class="mr-5" id="prev-btn">
+      <i class="fas fa-arrow-circle-left"></i>
+    </button>
+
+    <!-- Book -->
+    <div id="book" class="book">
+      <!-- Paper 1 -->
+      <div id="p1" class="paper">
+        <div class="front">
+          <div id="f1" class="front-content">
+            <img src="assets/front.png" class="object-cover w-full h-full" />
+          </div>
+        </div>
+        <div class="back">
+          <div id="b1" class="back-content">
+            <img
+              src="assets/Wallpaper.jpeg"
+              class="object-cover h-full w-full absolute -z-10"
+              alt=""
+            />
+            <h1 class="text-2xl font-black">Azhagiyeeee&#129325;</h1>
+            <audio src="music/src/Azhagiye.mp3" id="audio"></audio>
+            <div
+              class="bg-blue-50 mt-10 w-3/4 h-80 border rounded-xl shadow-[0_0_20px_5px_rgba(0,0,0,0.3)] overflow-hidden"
+            >
+              <h1
+                class="text-center text-2xl font-semibold mt-3"
+                id="namaMusik"
+              >
+                Music name
+              </h1>
+              <p class="text-center" id="namaArtis">Nama Artis</p>
+              <div
+                class="w-24 h-24 rounded-full relative mx-auto shadow-xl mt-2"
+              >
+                <img
+                  src="./music/cover/SampaiJadiDebu.jpg"
+                  class="rounded-full"
+                  id="cover"
+                />
+              </div>
+              <div id="slider" class="w-full relative p-10 -mt-7">
+                <input
+                  type="range"
+                  value="0"
+                  id="seek-bar"
+                  class="bg-pink-200 h-2 rounded-xl w-full cursor-pointer"
+                />
+                <span id="lama-musik" class="absolute right-10">00.00</span>
+                <span id="realtime">00.00</span>
+              </div>
+
+              <div
+                id="kontrol"
+                class="w-full flex justify-center items-center gap-10 mx-auto -mt-2"
+              >
+                <button class="sesudah">
+                  <i
+                    class="fa-solid fas fa-backward-step text-3xl text-black"
+                  ></i>
+                </button>
+                <button
+                  class="playButton pause relative w-7 h-7 rounded-full bg-black hover:bg-gray-500"
+                >
+                  <span></span>
+                  <span></span>
+                </button>
+                <button class="sebelum">
+                  <i class="fa-solid fa-forward-step text-3xl text-black"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Paper 2 -->
+      <div id="p2" class="paper">
+        <div class="front">
+          <div id="f2" class="front-content">
+            <img
+              src="assets/Wallpaper.jpeg"
+              class="object-cover w-full h-full absolute -z-10"
+              alt=""
+            />
+            <h1 class="font-black">My Best Moments With You</h1>
+            <div class="text-sm text-justify p-5">
+              <p>
+                Sometimes I think back to how everything started between us, and it feels like every little memory was meant to bring us closer. One of the strongest memories I have is when I used to come over to your place. We would just get lost in each other’s presence, like the whole world outside didn’t exist. It wasn’t about anything else — it was just love, raw and pure. Some might call it lust, but it never felt that way. It felt like belonging, like I had already found the person I wanted to spend the rest of my life with.
+              </p>
+              <br />
+              <p>
+                Even though that time turned into a “forgetful” memory — when your parents read our chats, when you ran out of the house crying, when things got so overwhelming — I can’t deny it shaped us. Those first few weeks with you will always remain unforgettable, even if they’re called “forgetful.” They made us who we are now, stronger and closer than ever.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="back">
+          <div id="b2" class="back-content">
+            <img
+              src="assets/Wallpaper.jpeg"
+              class="object-cover w-full h-full absolute -z-10"
+            />
+            <h1 class="font-black">Our Journey</h1>
+            <div class="text-sm text-justify p-5">
+              <p>
+                These two years have been full of everything — good moments, sad ones, exciting adventures, and even boring days. But what makes our relationship so special is that we’re not like everyone else. We don’t need to talk for hours every single day to prove our love. We respect each other’s space, we give each other time, and we trust. That trust is what makes us strong.
+              </p>
+              <br />
+              <p>
+                And yes, we fight — oh my God, we fight a lot sometimes. You can be such a cutie, but when you’re mad, I honestly don’t know what gets into you. Still, no matter how big the fight is, I’ve never wanted to give up on us. Not once. Because deep down, I know you’re my person. My safe place. My home. 
+              </p>
+              <br />
+              <p>
+                Every argument has only reminded me how much I love you, and how much I want this to last forever. You’re not just my girlfriend — you’re my partner, my best friend, my comfort, and my favorite story to tell.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Paper 3 -->
+      <div id="p3" class="paper">
+        <div class="front">
+          <div id="f3" class="front-content">
+            <img
+              src="assets/Wallpaper.jpeg"
+              class="object-cover h-full w-full absolute -z-10"
+              alt=""
+            />
+            <div class="text-sm text-justify p-5">
+              <p>
+                I still can’t believe how close I feel to your family now. Every date with you feels like we’re already our own little family. The way your parents accept me and trust us — it’s the sweetest and most heartwarming thing. Honestly, I’d love to go on more dates with your parents too, it always makes me smile.
+              </p>
+              <br />
+              <p>
+                One of my favorite memories was the most recent time I came over. Even though it was only for two hours, and we spent most of it packing your luggage, it never felt like work. You know how lazy I can be, but with you, even helping out felt fun and light — like a scene straight from a movie. And of course, your kisses had me working harder than I ever thought I could, haha.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="back">
+          <div id="b3" class="back-content">
+            <img
+              src="assets/Wallpaper.jpeg"
+              class="object-cover w-full h-full absolute -z-10"
+              alt=""
+            />
+            <div class="text-sm text-justify p-5">
+              <p>
+                The only thing I hate is when time runs too fast with you. A few hours with you always feel like a few minutes, and I’m left wishing I could pause everything just to stay longer. I can’t wait for the day when we won’t have to count hours anymore, when it will be just the two of us, all day, every day. 
+              </p>
+              <br />
+              <p>
+                You’re the best thing that has ever happened to me. And no matter how much time passes, no matter how much we change, one thing will always stay the same — my love for you. Always and forever.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+        <div class="back">
+          <div id="b6" class="back-content">
+            <img
+              src="assets/back.png"
+              class="object-cover h-full w-full"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next Button -->
+    <button class="ml-5" id="next-btn">
+      <i class="fas fa-arrow-circle-right"></i>
+    </button>
+
+    <script src="./music/data.js"></script>
+    <script src="./music/app.js"></script>
+    <script>
+      // References to DOM Elements
+      const prevBtn = document.querySelector("#prev-btn");
+      const nextBtn = document.querySelector("#next-btn");
+      const book = document.querySelector("#book");
+
+      const paper1 = document.querySelector("#p1");
+      const paper2 = document.querySelector("#p2");
+      const paper3 = document.querySelector("#p3");
+      const paper4 = document.querySelector("#p4");
+      const paper5 = document.querySelector("#p5");
+      const paper6 = document.querySelector("#p6");
+
+      // Event Listener
+      prevBtn.addEventListener("click", goPrevPage);
+      nextBtn.addEventListener("click", goNextPage);
+
+      // Business Logic
+      let currentLocation = 1;
+      let numOfPapers = 6;
+      let maxLocation = numOfPapers + 1;
+
+      function openBook() {
+        book.style.transform = "translateX(50%)";
+        prevBtn.style.transform = "translateX(-180px)";
+        nextBtn.style.transform = "translateX(180px)";
+      }
+
+      function closeBook(isAtBeginning) {
+        if (isAtBeginning) {
+          book.style.transform = "translateX(0%)";
+        } else {
+          book.style.transform = "translateX(100%)";
+        }
+
+        prevBtn.style.transform = "translateX(0px)";
+        nextBtn.style.transform = "translateX(0px)";
+      }
+
+      function goNextPage() {
+        if (currentLocation < maxLocation) {
+          switch (currentLocation) {
+            case 1:
+              openBook();
+              paper1.classList.add("flipped");
+              paper1.style.zIndex = 1;
+              break;
+            case 2:
+              paper2.classList.add("flipped");
+              paper2.style.zIndex = 2;
+              break;
+            case 3:
+              paper3.classList.add("flipped");
+              paper3.style.zIndex = 3;
+              break;
+            case 4:
+              paper4.classList.add("flipped");
+              paper4.style.zIndex = 4;
+              break;
+            case 5:
+              paper5.classList.add("flipped");
+              paper5.style.zIndex = 5;
+              break;
+            case 6:
+              paper6.classList.add("flipped");
+              paper6.style.zIndex = 6;
+              closeBook(false);
+              break;
+            default:
+              throw new Error("unkown state");
+          }
+          currentLocation++;
+        }
+      }
+
+      function goPrevPage() {
+        if (currentLocation > 1) {
+          switch (currentLocation) {
+            case 2:
+              closeBook(true);
+              paper1.classList.remove("flipped");
+              paper1.style.zIndex = 6;
+              break;
+            case 3:
+              paper2.classList.remove("flipped");
+              paper2.style.zIndex = 5;
+              break;
+            case 4:
+              paper3.classList.remove("flipped");
+              paper3.style.zIndex = 4;
+              break;
+            case 5:
+              paper4.classList.remove("flipped");
+              paper4.style.zIndex = 3;
+              break;
+            case 6:
+              paper5.classList.remove("flipped");
+              paper5.style.zIndex = 2;
+              break;
+            case 7:
+              openBook();
+              paper6.classList.remove("remove");
+              paper6.style.zIndex = 1;
+              break;
+            default:
+              throw new Error("unkown state");
+          }
+
+          currentLocation--;
+        }
+      }
+
+      openBook();
+      goNextPage();
+    </script>
+  </body>
+</html>
