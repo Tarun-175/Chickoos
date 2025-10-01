@@ -32,10 +32,13 @@
       /* Book */
       .book {
         position: relative;
-        width: 350px;
-        height: 550px;
+        width: 90vw;        /* scale with screen width */
+        max-width: 350px;   /* but don’t exceed laptop design */
+        height: 75vh;       /* scale with screen height */
+        max-height: 550px;  /* but don’t exceed laptop design */
         transition: transform 0.5s;
       }
+
 
       .paper {
         position: absolute;
@@ -137,7 +140,9 @@
       }
 
       img {
-        border-radius: 12px;
+          max-width: 100%;
+          height: auto;
+          border-radius: 12px;
       }
 
       #seek-bar {
@@ -198,6 +203,27 @@
           box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.4);
         }
       }
+
+      @media (max-width: 600px) {
+        
+        body {
+          flex-direction: column;
+        }
+      
+        button i {
+          font-size: 35px; /* smaller buttons */
+        }
+      
+        .book {
+          width: 95vw;
+          height: 70vh;
+        }
+      
+        .text-sm {
+          font-size: 0.85rem; /* make text smaller */
+        }
+      }
+
     </style>
   </head>
 
